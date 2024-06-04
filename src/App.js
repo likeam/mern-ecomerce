@@ -1,9 +1,14 @@
-import ProductList from "./features/product-list/ProductList";
+
+import './App.css'
+import Home from './pages/Home'
+
 
 export default function App() {
   return (
     <>
-      <ProductList />
+      <div className="App">
+        <Home></Home>
+      </div>
     </>
   )
 }
