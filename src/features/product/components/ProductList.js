@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  increment,
-  incrementAsync,
-  selectCount,
-} from '../productListSlice';
+import { 
+  fetchAllProductsAsync,
+  selectAllProducts,
+} from '../productSlice';
+
 
 import { Fragment, useState } from 'react'
 import {
@@ -21,8 +21,11 @@ import {
   TransitionChild,
 } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon,  ChevronLeftIcon, ChevronRightIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { Link } from 'react-router-dom';
+import { ChevronDownIcon,  ChevronLeftIcon, ChevronRightIcon, FunnelIcon, StarIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
+import { Link, json } from 'react-router-dom';
+
+
+
 
 
 const items = [
@@ -82,7 +85,7 @@ function classNames(...classes) {
 }
 
 
-const products = [
+export const oldproducts = [
   {
     id: 1,
     name: 'Basic Tee',
@@ -122,12 +125,20 @@ const products = [
 ]
 
 
+
 export  default function ProductList() {
-  const count = useSelector(selectCount);
+  const product = useSelector(selectAllProducts);
+  const products = json(product)
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  console.log(json(products))
 
- 
+  useEffect(() =>{
+    dispatch(fetchAllProductsAsync())
+  }, [dispatch])
+
+  console.log(fetchAllProductsAsync)
+  console.log(selectAllProducts)
 
   return (
     <div>
@@ -342,11 +353,11 @@ export  default function ProductList() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
             <Link to="/product-detail" >
-            <div key={product.id} className="group relative">
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+            <div key={product.id} className="group relative border-solid border-2 border-gray-300 p-2">
+              <div className=" min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img
-                  src={product.imageSrc}
-                  alt={product.imageAlt}
+                  src={product.images}
+                  alt={product.thumbnail}
                   className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />
               </div>
@@ -355,12 +366,15 @@ export  default function ProductList() {
                   <h3 className="text-sm text-gray-700">
                     <a href={product.href}>
                       <span aria-hidden="true" className="absolute inset-0" />
-                      {product.name}
+                      {product.title}
                     </a>
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    <StarIcon className=' w-6 h-6 inline' ></StarIcon>
+                    <span className=' align-bottom'>{product.rating}</span>
+                    </p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">{product.price}</p>
+                <p className="text-sm font-medium text-gray-900">Rs  {product.price}</p>
               </div>
             </div>
             </Link>
