@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchAllProducts } from "./ProductAPI";
-import { oldproducts } from "./components/ProductList";
+
 
 const initialState = {
   products: [],
-  status: "idle",
 };
 
 export const fetchAllProductsAsync = createAsyncThunk(
@@ -21,7 +20,7 @@ export const productSlice = createSlice({
   initialState,
 
   reducers: {
-    products: (state) => {
+    product: (state) => {
       state.value += 1;
     },
   },
@@ -33,12 +32,12 @@ export const productSlice = createSlice({
       })
       .addCase(fetchAllProductsAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.products += action.payload;
+        state.products = action.payload;
       });
   },
 });
 
-export const { products } = productSlice.actions;
+
 
 export const selectAllProducts = (state) => state.product.products;
 
